@@ -37,6 +37,18 @@ public class Tester {
         } catch (IndexOutOfBoundsException e) {
             System.out.println("IndexOutOfBoundsException");
         }
+
+        System.out.println("---------------------------------");
+
+        CustomList customList = new CustomList();
+        System.out.println("isEmpty: " + customList.isEmpty());
+        System.out.println("added: " + customList.add("test_1"));
+        System.out.println("added: " + customList.add("test_2"));
+        System.out.println("isEmpty: " + customList.isEmpty());
+        System.out.println("size: " + customList.size());
+        System.out.println("remove: " + customList.remove(0));
+        System.out.println("size: " + customList.size());
+
     }
 
     private static String mySubString(String string, int startPos) {

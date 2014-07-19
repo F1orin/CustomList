@@ -8,13 +8,14 @@ import java.util.ListIterator;
  */
 public class CustomList implements List {
 
-    private Node first;
-    private Node last;
-
+    private Node header;
     private int size;
 
     public CustomList() {
-        first = new Node();
+        header = new Node();
+        header.setNext(header);
+        header.setPrevious(header);
+        size = 0;
     }
 
     @Override
@@ -24,12 +25,12 @@ public class CustomList implements List {
 
     @Override
     public int size() {
-        return 0;
+        return size;
     }
 
     @Override
     public boolean isEmpty() {
-        return false;
+        return size() == 0;
     }
 
     @Override
@@ -54,7 +55,17 @@ public class CustomList implements List {
 
     @Override
     public boolean add(Object o) {
-        return false;
+        // create new node in the end of the list, so that
+        // next element is header and previous element is
+        // header's previous element (which means list's last element)
+        Node newNode = new Node(o, header, header.getPrevious());
+        // set link for self in previous element
+        newNode.getPrevious().setNext(newNode);
+        // set link for self in next element
+        newNode.getNext().setPrevious(newNode);
+        // increment size
+        size++;
+        return true;
     }
 
     @Override
@@ -102,14 +113,62 @@ public class CustomList implements List {
         return null;
     }
 
+    /**
+    Returns the node at specified index
+     */
+    private Node node(int index) {
+        if (index < 0 || index > size) {
+            throw new IndexOutOfBoundsException();
+        }
+
+        Node node = header;
+        if (index < (size >> 1)) {
+            // if index is less than half size then search from the beginning
+            for (int i = 0; i <= index; i++) {
+                node = node.getNext();
+            }
+        } else {
+            // search from the end
+            for (int i = size; i > index ; i--) {
+                node = node.getPrevious();
+            }
+        }
+        return node;
+    }
+
     @Override
     public void add(int index, Object element) {
-
+        // element, before which current element will be added
+        Node targetNode = (index == size) ? header : node(index);
+        // create new node and set its next element as targetNode and
+        // previous element as previous element of targetNode
+        Node newNode = new Node(element, targetNode, targetNode.getPrevious());
+        // set link for self in previous element
+        newNode.getPrevious().setNext(newNode);
+        // set link for self in next element
+        newNode.getNext().setPrevious(newNode);
+        // increment size
+        size++;
     }
 
     @Override
     public Object remove(int index) {
-        return null;
+        // find node by index
+        Node targetNode = node(index);
+        // save data from the node to return it from the method
+        Object data = targetNode.getData();
+        // set "next" link at previous element
+        targetNode.getPrevious().setNext(targetNode.getNext());
+        // set "previous" link at next element
+        targetNode.getNext().setPrevious(targetNode.getPrevious());
+        // remove links to other elements
+        targetNode.setNext(null);
+        targetNode.setPrevious(null);
+        // remove data
+        targetNode.setData(null);
+        // decrement size
+        size--;
+        return data;
     }
 
     @Override
@@ -144,7 +203,7 @@ public class CustomList implements List {
         public Node() {
         }
 
-        private Node(Node next, Node previous, Object data) {
+        private Node(Object data, Node next, Node previous) {
             this.next = next;
             this.previous = previous;
             this.data = data;
