@@ -1,16 +1,42 @@
 /**
- * Created by florin on 7/17/14.
+ * Created by florin on 19.07.2014.
  */
 public class Tester {
 
     public static void main(String[] args) {
         String testString = "Test";
-        System.out.println("Original 2:" + testString.substring(2));
-        System.out.println("Original 4:" + testString.substring(4));
-//        System.out.println("Original 5:" + testString.substring(5));
-        System.out.println("Custom 2:" + mySubString(testString, 2));
-        System.out.println("Custom 4:" + mySubString(testString, 4));
-//        System.out.println("Custom 5:" + mySubString(testString, 5));
+
+        try {
+            System.out.println("Original 2:" + testString.substring(2));
+            System.out.println("Original 4:" + testString.substring(4));
+            System.out.println("Original 5:" + testString.substring(5));
+        } catch (IndexOutOfBoundsException e) {
+            System.out.println("IndexOutOfBoundsException");
+        }
+
+        try {
+            System.out.println("Original 2-4:" + testString.substring(2, 4));
+            System.out.println("Original 4-4:" + testString.substring(4, 4));
+            System.out.println("Original 3-2:" + testString.substring(3, 2));
+        } catch (IndexOutOfBoundsException e) {
+            System.out.println("IndexOutOfBoundsException");
+        }
+
+        try {
+            System.out.println("Custom 2:" + mySubString(testString, 2));
+            System.out.println("Custom 4:" + mySubString(testString, 4));
+            System.out.println("Custom 5:" + mySubString(testString, 5));
+        } catch (IndexOutOfBoundsException e) {
+            System.out.println("IndexOutOfBoundsException");
+        }
+
+        try {
+            System.out.println("Custom 2-4:" + mySubString(testString, 2, 4));
+            System.out.println("Custom 4-4:" + mySubString(testString, 4, 4));
+            System.out.println("Custom 3-2:" + mySubString(testString, 3, 2));
+        } catch (IndexOutOfBoundsException e) {
+            System.out.println("IndexOutOfBoundsException");
+        }
     }
 
     private static String mySubString(String string, int startPos) {
@@ -43,7 +69,24 @@ public class Tester {
     private static String mySubString(String string, int startPos, int endPos) {
         // create char array from target string
         char[] stringArray = string.toCharArray();
-        return null;
+
+        // throw exception if startPos or endPos is bigger that string's length
+        // or endPos is before startPos
+        if (startPos > stringArray.length || endPos > stringArray.length || endPos < startPos) {
+            throw new IndexOutOfBoundsException();
+        }
+
+        // calculate the length of substring and initialize char array for substring
+        int subStringLength = endPos - startPos;
+        char[] subStringArray = new char[subStringLength];
+
+        // copy chars from target string char array to substring char array
+        // beginning from startPos (inclusively) to the endPos (exclusively)
+        for (int i = startPos; i < endPos; i++) {
+            subStringArray[i - startPos] = stringArray[i];
+        }
+
+        return new String(subStringArray);
     }
 
 }
