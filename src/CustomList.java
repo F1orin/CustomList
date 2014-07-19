@@ -6,14 +6,20 @@ import java.util.ListIterator;
 /**
  * Created by florin on 7/17/14.
  */
-public class CustomList<E> implements List<E> {
+public class CustomList implements List {
 
-    private Node<E> node;
+    private Node first;
+    private Node last;
 
-    private int size = 0;
+    private int size;
 
     public CustomList() {
-        this.node = new Node<E>();
+        first = new Node();
+    }
+
+    @Override
+    public List subList(int fromIndex, int toIndex) {
+        return null;
     }
 
     @Override
@@ -42,12 +48,22 @@ public class CustomList<E> implements List<E> {
     }
 
     @Override
+    public Object[] toArray(Object[] a) {
+        return new Object[0];
+    }
+
+    @Override
     public boolean add(Object o) {
         return false;
     }
 
     @Override
     public boolean remove(Object o) {
+        return false;
+    }
+
+    @Override
+    public boolean containsAll(Collection c) {
         return false;
     }
 
@@ -62,17 +78,27 @@ public class CustomList<E> implements List<E> {
     }
 
     @Override
+    public boolean removeAll(Collection c) {
+        return false;
+    }
+
+    @Override
+    public boolean retainAll(Collection c) {
+        return false;
+    }
+
+    @Override
     public void clear() {
 
     }
 
     @Override
-    public E get(int index) {
+    public Object get(int index) {
         return null;
     }
 
     @Override
-    public E set(int index, Object element) {
+    public Object set(int index, Object element) {
         return null;
     }
 
@@ -82,7 +108,7 @@ public class CustomList<E> implements List<E> {
     }
 
     @Override
-    public E remove(int index) {
+    public Object remove(int index) {
         return null;
     }
 
@@ -97,37 +123,55 @@ public class CustomList<E> implements List<E> {
     }
 
     @Override
-    public ListIterator<E> listIterator() {
+    public ListIterator listIterator() {
         return null;
     }
 
     @Override
-    public ListIterator<E> listIterator(int index) {
+    public ListIterator listIterator(int index) {
         return null;
     }
 
-    @Override
-    public boolean retainAll(Collection c) {
-        return false;
-    }
+    private static class Node {
 
-    @Override
-    public boolean removeAll(Collection c) {
-        return false;
-    }
+        // reference to the next node
+        private Node next;
+        // reference to the previous node
+        private Node previous;
+        // data of the current node
+        private Object data;
 
-    @Override
-    public boolean containsAll(Collection c) {
-        return false;
-    }
+        public Node() {
+        }
 
-    @Override
-    public <T> T[] toArray(T[] a) {
-        return null;
-    }
+        private Node(Node next, Node previous, Object data) {
+            this.next = next;
+            this.previous = previous;
+            this.data = data;
+        }
 
-    @Override
-    public List<E> subList(int fromIndex, int toIndex) {
-        return null;
+        public Node getNext() {
+            return next;
+        }
+
+        public void setNext(Node next) {
+            this.next = next;
+        }
+
+        public Node getPrevious() {
+            return previous;
+        }
+
+        public void setPrevious(Node previous) {
+            this.previous = previous;
+        }
+
+        public Object getData() {
+            return data;
+        }
+
+        public void setData(Object data) {
+            this.data = data;
+        }
     }
 }
