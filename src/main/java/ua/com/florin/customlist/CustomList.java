@@ -1,3 +1,5 @@
+package main.java.ua.com.florin.customlist;
+
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
@@ -114,7 +116,7 @@ public class CustomList implements List {
     }
 
     /**
-    Returns the node at specified index
+     * Returns the node at specified index
      */
     private Node node(int index) {
         if (index < 0 || index > size) {
@@ -129,7 +131,7 @@ public class CustomList implements List {
             }
         } else {
             // search from the end
-            for (int i = size; i > index ; i--) {
+            for (int i = size; i > index; i--) {
                 node = node.getPrevious();
             }
         }
@@ -173,12 +175,44 @@ public class CustomList implements List {
 
     @Override
     public int indexOf(Object o) {
-        return 0;
+        int index = 0;
+        if (o == null) {
+            for (Node n = header.getNext(); n != header; n = n.getNext()) {
+                if (n.getData() == null) {
+                    return index;
+                }
+                index++;
+            }
+        } else {
+            for (Node n = header.getNext(); n != header; n = n.getNext()) {
+                if (o.equals(n.getData())) {
+                    return index;
+                }
+                index++;
+            }
+        }
+        return -1;
     }
 
     @Override
     public int lastIndexOf(Object o) {
-        return 0;
+        int index = size();
+        if (o == null) {
+            for (Node n = header.getPrevious(); n != header; n = n.getPrevious()) {
+                index--;
+                if (n.getData() == null) {
+                    return index;
+                }
+            }
+        } else {
+            for (Node n = header.getPrevious(); n != header; n = n.getPrevious()) {
+                index--;
+                if (o.equals(n.getData())) {
+                    return index;
+                }
+            }
+        }
+        return -1;
     }
 
     @Override
