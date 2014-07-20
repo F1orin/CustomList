@@ -3,7 +3,11 @@ package test.java;
 import main.java.ua.com.florin.customlist.CustomList;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
+
+import java.util.List;
 
 import static org.junit.Assert.*;
 
@@ -49,16 +53,21 @@ public class CustomListTest {
         oneItemCustomList = null;
         fiveItemsCustomList = null;
     }
+    @Rule
+    public ExpectedException expectedException = ExpectedException.none();
 
     @Test
     public void testSubList() throws Exception {
-
+        oneItemCustomList.add(null);
+        assertEquals(oneItemCustomList.get(0), fiveItemsCustomList.subList(0, 1).get(0));
+        assertEquals(oneItemCustomList.get(1), fiveItemsCustomList.subList(0, 2).get(1));
+        assertEquals(oneItemCustomList.size(), fiveItemsCustomList.subList(0, 2).size());
     }
 
     @Test
     public void testSize() throws Exception {
-        assertEquals(0,emptyCustomList.size());
-        assertEquals(1,oneItemCustomList.size());
+        assertEquals(0, emptyCustomList.size());
+        assertEquals(1, oneItemCustomList.size());
     }
 
     @Test
@@ -69,7 +78,8 @@ public class CustomListTest {
 
     @Test
     public void testContains() throws Exception {
-
+        assertTrue(fiveItemsCustomList.contains(firstValue));
+        assertFalse(emptyCustomList.contains(firstValue));
     }
 
     @Test
@@ -79,7 +89,11 @@ public class CustomListTest {
 
     @Test
     public void testToArray() throws Exception {
-
+        Object[] objects = new Object[1];
+        objects[0] = firstValue;
+        Object[] emptyObjects = new Object[0];
+        assertEquals(objects, oneItemCustomList.toArray());
+        assertEquals(emptyObjects, emptyCustomList.toArray());
     }
 
     @Test
@@ -97,9 +111,12 @@ public class CustomListTest {
 
     @Test
     public void testRemove() throws Exception {
-        assertFalse(oneItemCustomList.isEmpty());
-        assertEquals(firstValue, oneItemCustomList.remove(0));
-        assertTrue(oneItemCustomList.isEmpty());
+        assertTrue(oneItemCustomList.remove(firstValue));
+        assertEquals(0, oneItemCustomList.size());
+        customList.add(null);
+        customList.add(null);
+        assertTrue(customList.remove(null));
+        assertEquals(null, customList.get(0));
     }
 
     @Test
@@ -129,17 +146,26 @@ public class CustomListTest {
 
     @Test
     public void testClear() throws Exception {
-
+        emptyCustomList.add(firstValue);
+        assertFalse(emptyCustomList.isEmpty());
+        emptyCustomList.clear();
+        assertTrue(emptyCustomList.isEmpty());
+        assertEquals(-1, emptyCustomList.indexOf(firstValue));
     }
 
     @Test
     public void testGet() throws Exception {
-
+        assertEquals(firstValue, fiveItemsCustomList.get(0));
+        assertEquals(fifthValue, fiveItemsCustomList.get(4));
+        expectedException.expect(IndexOutOfBoundsException.class);
+        emptyCustomList.get(2);
     }
 
     @Test
     public void testSet() throws Exception {
-
+        customList.add(firstValue);
+        assertEquals(firstValue, customList.set(0, thirdValue));
+        assertEquals(thirdValue, customList.get(0));
     }
 
     @Test
@@ -149,7 +175,9 @@ public class CustomListTest {
 
     @Test
     public void testRemove1() throws Exception {
-
+        assertFalse(oneItemCustomList.isEmpty());
+        assertEquals(firstValue, oneItemCustomList.remove(0));
+        assertTrue(oneItemCustomList.isEmpty());
     }
 
     @Test

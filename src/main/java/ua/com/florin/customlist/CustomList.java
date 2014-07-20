@@ -22,7 +22,24 @@ public class CustomList implements List {
 
     @Override
     public List subList(int fromIndex, int toIndex) {
-        return null;
+        // throw exception if index is out of range
+        if (fromIndex < 0 || toIndex > size() || toIndex < fromIndex) {
+            throw new IndexOutOfBoundsException();
+        }
+        List list = new CustomList();
+        Node n = node(fromIndex);
+
+        // if indexes are equal then return empty list
+        if (fromIndex == toIndex) {
+            return list;
+        }
+
+        // copy elements to new list
+        for (int i = fromIndex; i < toIndex; i++) {
+            list.add(n.getData());
+            n = n.getNext();
+        }
+        return list;
     }
 
     @Override
@@ -37,7 +54,7 @@ public class CustomList implements List {
 
     @Override
     public boolean contains(Object o) {
-        return false;
+        return indexOf(o) != -1;
     }
 
     @Override
@@ -47,7 +64,15 @@ public class CustomList implements List {
 
     @Override
     public Object[] toArray() {
-        return new Object[0];
+        // create new array
+        Object[] objects = new Object[size()];
+        // init iterator
+        int i = 0;
+        // fill the array with data from the list
+        for (Node n = header.getNext(); n != header; n = n.getNext(), i++) {
+            objects[i] = n.getData();
+        }
+        return objects;
     }
 
     @Override
@@ -72,6 +97,39 @@ public class CustomList implements List {
 
     @Override
     public boolean remove(Object o) {
+        if (o == null) {
+            for (Node n = header.getNext(); n != header; n = n.getNext()) {
+                if (n.getData() == null) {
+                    // set "next" link at previous element
+                    n.getPrevious().setNext(n.getNext());
+                    // set "previous" link at next element
+                    n.getNext().setPrevious(n.getPrevious());
+                    // remove links to other elements
+                    n.setNext(null);
+                    n.setPrevious(null);
+                    // decrement size
+                    size--;
+                    return true;
+                }
+            }
+        } else {
+            for (Node n = header.getNext(); n != header; n = n.getNext()) {
+                if (o.equals(n.getData())) {
+                    // set "next" link at previous element
+                    n.getPrevious().setNext(n.getNext());
+                    // set "previous" link at next element
+                    n.getNext().setPrevious(n.getPrevious());
+                    // remove links to other elements
+                    n.setNext(null);
+                    n.setPrevious(null);
+                    // remove data
+                    n.setData(null);
+                    // decrement size
+                    size--;
+                    return true;
+                }
+            }
+        }
         return false;
     }
 
@@ -102,40 +160,47 @@ public class CustomList implements List {
 
     @Override
     public void clear() {
-
+        for (Node n = header.getNext(); n != header;) {
+            // remember the link to next node
+            // because it will be cleared during the iteration
+            Node next = n.getNext();
+            // clear data and links
+            n.setData(null);
+            n.setPrevious(null);
+            n.setNext(null);
+            // set target node to previously remembered link
+            n = next;
+        }
+        // set header links
+        header.setNext(header);
+        header.setPrevious(header);
+        // set size
+        size = 0;
     }
 
     @Override
     public Object get(int index) {
-        return null;
+        // throw exception if index is out of range
+        if (index < 0 || index > size()) {
+            throw new IndexOutOfBoundsException();
+        }
+        // use already written method to find node by index
+        return node(index).getData();
     }
 
     @Override
     public Object set(int index, Object element) {
-        return null;
-    }
-
-    /**
-     * Returns the node at specified index
-     */
-    private Node node(int index) {
-        if (index < 0 || index > size) {
+        // throw exception if index is out of range
+        if (index < 0 || index > size()) {
             throw new IndexOutOfBoundsException();
         }
-
-        Node node = header;
-        if (index < (size >> 1)) {
-            // if index is less than half size then search from the beginning
-            for (int i = 0; i <= index; i++) {
-                node = node.getNext();
-            }
-        } else {
-            // search from the end
-            for (int i = size; i > index; i--) {
-                node = node.getPrevious();
-            }
-        }
-        return node;
+        // use already written method to find node by index
+        Node node = node(index);
+        // remember previous data to return it later
+        Object previousValue = node.getData();
+        // set new data value
+        node.setData(element);
+        return previousValue;
     }
 
     @Override
@@ -176,6 +241,7 @@ public class CustomList implements List {
     @Override
     public int indexOf(Object o) {
         int index = 0;
+        // iterate through list from start to end using "next" link of each node
         if (o == null) {
             for (Node n = header.getNext(); n != header; n = n.getNext()) {
                 if (n.getData() == null) {
@@ -197,6 +263,7 @@ public class CustomList implements List {
     @Override
     public int lastIndexOf(Object o) {
         int index = size();
+        // iterate through list from end to start using "previous" link of each node
         if (o == null) {
             for (Node n = header.getPrevious(); n != header; n = n.getPrevious()) {
                 index--;
@@ -223,6 +290,29 @@ public class CustomList implements List {
     @Override
     public ListIterator listIterator(int index) {
         return null;
+    }
+
+    /**
+     * Returns the node at specified index
+     */
+    private Node node(int index) {
+        if (index < 0 || index > size) {
+            throw new IndexOutOfBoundsException();
+        }
+
+        Node node = header;
+        if (index < (size >> 1)) {
+            // if index is less than half size then search from the beginning
+            for (int i = 0; i <= index; i++) {
+                node = node.getNext();
+            }
+        } else {
+            // search from the end
+            for (int i = size; i > index; i--) {
+                node = node.getPrevious();
+            }
+        }
+        return node;
     }
 
     private static class Node {
