@@ -1,11 +1,21 @@
 package main.java.ua.com.florin.substring;
 
 /**
+ * Contains custom realizations of substring methods for the sake of practice
+ * <p/>
  * Created by florin on 20.07.2014.
  */
 public class SubStringer {
 
+    /**
+     * Returns the substring beginning from the given start position inclusively
+     *
+     * @param string   target string for getting the substring
+     * @param startPos start position from which to get the substring (inclusively)
+     * @return substring from startPos inclusively
+     */
     public static String mySubString(String string, int startPos) {
+
         // create char array from target string
         char[] stringArray = string.toCharArray();
 
@@ -32,6 +42,14 @@ public class SubStringer {
         return new String(subStringArray);
     }
 
+    /**
+     * Returns the substring beginning from the given start position inclusively and endPosition exclusively
+     *
+     * @param string   target string for getting the substring
+     * @param startPos start position from which to get the substring (inclusively)
+     * @param endPos   end position to which to get the substring (exclusively)
+     * @return substring from startPos inclusively and endPos exclusively
+     */
     public static String mySubString(String string, int startPos, int endPos) {
         // create char array from target string
         char[] stringArray = string.toCharArray();
